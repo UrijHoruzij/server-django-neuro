@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="images"></div>
+    <form name="image">
+        <input type="file" name="Upload_Img" onchange="encodeImageFileAsURL(this)">
+    </form>
+    <script>
+        url = "http://urij.insomnia247.nl:5301/";
+
+        function encodeImageFileAsURL(element) {
+            var file = element.files[0];
+            var reader = new FileReader();
+            var index,image;
+            reader.fileName = file.name;
+            reader.onloadend = function() {
+                index=reader.result.indexOf(",");
+                image=reader.result.substring(index+1);
+                //send(image,reader.fileName);
+                GetImageID(image,reader.fileName)
+            }
+            reader.readAsDataURL(file);
+        }
+        function send(image,title){
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: {command: 'Add',title: title,  upload: image, meta: "222"},
+                success: function(data) {
+                    console.log(data); // Возвращаемые данные выводим в консоль
+                 } 
+            });
+        }
+
+        function GetImage(imageID, container){
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: {command: 'getImage', imageId: imageID },
+                success: function(data) {
+                    var dataImages = "data:image/jpg;base64,"+data["image"].substring(2, data["image"].length - 1);
+                    container.innerHTML += '<img src="'+dataImages+'"><br><div>'+data['meta']+'<div><br>';
+                 }
+            });
+        }
+        function GetImageID(image, title){
+            $.ajax({
+                url: url,
+                method: 'POST',
+                //dataType: 'JSON',
+                //contentType: 'application/json',
+                data: {command: 'Find', title: title,  upload: image},
+                success: function(data) {
+                    if(data){
+                        console.log(data);
+                        for(var i =0; i<data["imageId"].length; i++)
+                        {
+                            var images = document.getElementById("images");
+                            var dataImages = GetImage(data["imageId"][i]["image"], images);
+                            console.log(GetImage(data["imageId"][i]["image"]), images);
+                        }
+                    }
+                 },
+                 async: false
+            });
+        }
+    </script>
+</body>
+</html>
