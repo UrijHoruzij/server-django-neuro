@@ -1,0 +1,14 @@
+{
+	"name": "server-django-neuro",
+	"version": "1.0.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/UrijHoruzij/server-django-neuro.git"
+	},
+	"author": "Urij Horuzij",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/UrijHoruzij/server-django-neuro/issues"
+	},
+	"homepage": "https://github.com/UrijHoruzij/server-django-neuro#readme"
+}
